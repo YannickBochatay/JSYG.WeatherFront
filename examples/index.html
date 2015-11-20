@@ -8,6 +8,7 @@
         <script src="../bower_components/jquery/dist/jquery.js"></script>
         <script src="../bower_components/jsyg/JSYG.js"></script>
         <script src="../bower_components/jsyg-path/JSYG.Path.js"></script>
+        <script src="../bower_components/jsyg-container/JSYG.Container.js"></script>
         <script src="../bower_components/jsyg-pencil/JSYG.Pencil.js"></script>
         <script src="../JSYG.WeatherFront.js"></script>
         <style>
@@ -33,7 +34,8 @@
             <input type="radio" name="typefront" value="occlusion"/> occlusion
         </label>
         <br>
-            
+        Stroke width : 0.1 <input type="range" min="0.1" max="20" step="0.1" name="strokeWidth" value="2"/> 20
+        <br/>
         Pattern spacing : 20 <input type="range" min="20" max="200" step="10" name="patternSpacing" value="50"/> 200
         <br>
         <label>
@@ -58,8 +60,11 @@
                if (pencil.inProgress) return;
                
                var path = new JSYG.Path();
-               path.addClass("front");
-               path.appendTo(this);
+               
+               path.addClass("front")
+                   .css("stroke-width", new JSYG("[name=strokeWidth]").val() )
+                   .appendTo(this);
+               
                pencil.setNode(path);
                pencil.draw(e);
             });

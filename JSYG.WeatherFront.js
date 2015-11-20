@@ -3,14 +3,14 @@
 
 (function(factory) {
     
-    if (typeof define != "undefined" && define.amd) define("jsyg-weatherfront",["jsyg","jsyg-path"],factory);
+    if (typeof define != "undefined" && define.amd) define("jsyg-weatherfront",["jsyg","jsyg-path","jsyg-container"],factory);
     else if (typeof JSYG != "undefined") {
-        if (JSYG.Path) factory(JSYG);
+        if (JSYG.Path && JSYG.Container) factory(JSYG,JSYG.Path,JSYG.Container);
         else throw new Error("You need JSYG.Path");
     }
     else throw new Error("JSYG is needed");
     
-})(function(JSYG) {
+})(function(JSYG,Path,Container) {
     
     "use strict";
     
@@ -35,7 +35,7 @@
         
         if (arg) this.setNode(arg);
     }
-    
+        
     WeatherFront.prototype = new JSYG.StdConstruct;
     
     WeatherFront.prototype.constructor = WeatherFront;
@@ -77,7 +77,7 @@
     
     WeatherFront.prototype._positionItem = function(item,length) {
         
-        var path = new JSYG.Path(this.node),
+        var path = new Path(this.node),
         point = path.getPointAtLength(i),
         angle = path.getRotateAtLength(i);
         
@@ -111,7 +111,7 @@
     
     WeatherFront.prototype._clearItems = function() {
         
-        new JSYG(this.container).find('use').remove();
+        new JSYG(this.container).find('g > use').remove();
         
         return this;
     };
@@ -141,10 +141,10 @@
         
         if (!this.display) return this;
         
-        var dim = this._geDimItem(),
-        path = new JSYG.Path(this.node),
+        var dim = this._geDimItem();
+        var path = new Path(this.node),
         length = path.getLength(),
-        g = new JSYG(this.container),
+        g = new JSYG(this.container).find('g'),
         strokeWidth = parseFloat( path.css("stroke-width") || 1 ),
         scale = 1 + (strokeWidth-1)/3,
         spacing = Number(this.patternSpacing),
@@ -180,7 +180,7 @@
     WeatherFront.prototype.hide = function() {
         
         var jNode = new JSYG(this.node);
-        
+                
         if (this._originalColor) jNode.css("stroke",this._originalColor);
         
         this._clearItems();
@@ -192,6 +192,8 @@
     
     WeatherFront.prototype.enable = function(opt) {
         
+        if (this.enabled) this.disable();
+        
         if (opt) this.set(opt);
         
         var parent = this.node.parentNode,
@@ -199,6 +201,8 @@
         defs;
         
         this.container.appendChild(this.node);
+        
+        this.container.appendChild( new JSYG('<g>')[0] );
         
         parent.appendChild(this.container);
         
@@ -208,23 +212,28 @@
         }
         
         this.enabled = true;
-        
+                
         this.show();
         
         return this;
     };
     
+    WeatherFront.prototype.removeDefs = function() {
+        
+        var def = document.getElementById(this._idDefs);
+        
+        if (def) this.node.nearestViewportElement.removeChild(document.getElementById(this._idDefs));
+        
+        return this;
+    }
+    
     WeatherFront.prototype.disable = function() {
         
-        var parent = this.container.parentNode;
+        if (!this.enabled) return this;
         
-        parent.appendChild(this.node);
+        this.hide();
         
-        parent.removeChild(this.container);
-        
-        this._clearItems();
-        
-        this.node.nearestViewportElement.removeChild(document.getElementById(this._idDefs));
+        new Container(this.container).freeItems(this.node).empty().remove();
         
         this.enabled = false;
         
