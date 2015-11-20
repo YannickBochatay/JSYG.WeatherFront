@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>JSYG tests</title>
+        <link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css">
+        <script src="../bower_components/qunit/qunit/qunit.js"></script>
+        <script src="../bower_components/jquery/dist/jquery.js"></script>
+        <script src="../bower_components/jsyg/JSYG.js"></script>
+        <script src="../bower_components/jsyg-path/JSYG.Path.js"></script>
+        <script src="../bower_components/jsyg-pencil/JSYG.Pencil.js"></script>
+        <script src="../JSYG.WeatherFront.js"></script>
+        <style>
+            svg {
+                border:1px solid gray;
+            }
+            path.front {
+                fill:none;
+                stroke:black;
+            }
+        </style>
+    </head>
+    <body>
+        <svg width="100%" height="700px">
+        </svg>
+        <label>
+            <input type="radio" name="typefront" value="coldfront" checked="checked"/> coldfront
+        </label>
+        <label>
+            <input type="radio" name="typefront" value="warmfront"/> warmfront
+        </label>
+        <label>
+            <input type="radio" name="typefront" value="occlusion"/> occlusion
+        </label>
+        <br>
+            
+        Pattern spacing : 20 <input type="range" min="20" max="200" step="10" name="patternSpacing" value="50"/> 200
+        <br>
+        <label>
+            <input type="checkbox" name="reverseAngle"/> reverseAngle
+        </label>
+        <script>
+            var pencil = new JSYG.Pencil();
+            
+            pencil.on("end",function() {
+                
+                new JSYG(this).weatherFront({
+                    patternSpacing: new JSYG("[name=patternSpacing]").val(),
+                    type : new JSYG("[name=typefront]:checked").val(),
+                    inverseAngle : !!new JSYG("[name=reverseAngle]:checked").length
+                });
+            });
+            
+            pencil.type = "point2point";
+            
+            $("svg").on("mousedown",function(e) {
+               
+               if (pencil.inProgress) return;
+               
+               var path = new JSYG.Path();
+               path.addClass("front");
+               path.appendTo(this);
+               pencil.setNode(path);
+               pencil.draw(e);
+            });
+        </script>
+    </body>
+</html>
