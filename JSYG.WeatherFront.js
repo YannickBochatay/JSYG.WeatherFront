@@ -14,7 +14,7 @@
     
     "use strict";
     
-    function WeatherFront(arg) {
+    function WeatherFront(arg,opt) {
         
         this.container = new JSYG("<g>")[0];
         
@@ -34,6 +34,8 @@
         };
         
         if (arg) this.setNode(arg);
+        
+        if (opt) this.enable(opt);
     }
         
     WeatherFront.prototype = new JSYG.StdConstruct;
@@ -42,7 +44,11 @@
     
     WeatherFront.prototype.type = "coldfront";
     
+    WeatherFront.prototype.className = "weatherFront";
+    
     WeatherFront.prototype.patternSpacing = 50;
+    
+    WeatherFront.prototype.patternScale = 'auto';
     
     WeatherFront.prototype.inverseAngle = false;
     
@@ -137,6 +143,15 @@
         return this;
     };
     
+    WeatherFront.prototype.calculateSize = function() {
+        
+        if (JSYG.isNumeric(this.patternScale)) return this.patternScale;
+        
+        var path = new JSYG(this.node),
+        strokeWidth = parseFloat( path.css("stroke-width") || 1 );
+        return 1 + (strokeWidth-1)/3;
+    }
+    
     WeatherFront.prototype.update = function() {
         
         if (!this.display) return this;
@@ -145,8 +160,7 @@
         var path = new Path(this.node),
         length = path.getLength(),
         g = new JSYG(this.container).find('g'),
-        strokeWidth = parseFloat( path.css("stroke-width") || 1 ),
-        scale = 1 + (strokeWidth-1)/3,
+        scale = this.calculateSize(),
         spacing = Number(this.patternSpacing),
         use, point,angle, i, cpt = 1;
         
@@ -199,12 +213,12 @@
         var parent = this.node.parentNode,
         svg = this.node.nearestViewportElement,
         defs;
-        
-        this.container.appendChild(this.node);
-        
-        this.container.appendChild( new JSYG('<g>')[0] );
-        
-        parent.appendChild(this.container);
+    
+        new JSYG(this.container)
+            .addClass(this.className)
+            .append(this.node)
+            .append( new JSYG('<g>')[0] )
+            .appendTo(parent);
         
         if (!(defs = document.getElementById(this._idDefs))) {
             svg = this.node.farthestViewportElement;
