@@ -15,7 +15,7 @@
     "devDependencies": {
         "qunit": "latest",
         "requirejs": "latest",
-        "jsyg-pencil":"latest"
+        "jsyg-pathdrawer":"latest"
     },
     "repository": {
         "type": "git",

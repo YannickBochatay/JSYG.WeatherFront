@@ -1807,7 +1807,7 @@
             
             if (x!=null) dim.x = x - rect.width/2;
             if (y!=null) dim.y = y - rect.height/2;
-                        
+            
             $this.setDim(dim);
             
         });
@@ -2244,7 +2244,8 @@
                 }
                 else {
                     
-                    box = this[0].getBBox();
+                    try { box = this[0].getBBox(); }
+                    catch(e) { return null; }
                     
                     dim = { //box est en lecture seule
                         x : box.x,
@@ -3969,7 +3970,9 @@
         
         if (standalone && this.isSVG()) {
             jNode.walkTheDom(function() {
-                new JSYG(this).style2attr().removeAttr("style");
+                var $this = new JSYG(this);
+                $this.style2attr();
+                if (JSYG.svgGraphics.indexOf($this.getTag()) != -1) $this.removeAttr("style");
             });
         }
         
