@@ -130,9 +130,15 @@
         
         var jNode = new JSYG(this.node);
         
-        this._originalColor = jNode.css("stroke");
+        this._originalColors = {
+            stroke:jNode.css("stroke"),
+            fill:jNode.css("fill")
+        };
         
-        jNode.css("stroke", this.types[this.type].color );
+        jNode.css({
+            "stroke":this.types[this.type].color,
+            "fill":"none"
+        });
         
         this.display = true;
         
@@ -195,7 +201,7 @@
         
         var jNode = new JSYG(this.node);
                 
-        if (this._originalColor) jNode.css("stroke",this._originalColor);
+        if (this._originalColors) jNode.css(this._originalColors);
         
         this._clearItems();
         
