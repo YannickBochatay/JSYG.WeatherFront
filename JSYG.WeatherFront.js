@@ -18,26 +18,27 @@
         
         this.container = new JSYG("<g>")[0];
         
-        this.types = {
-            "coldfront" : {
-                color : "blue",
-                path : "M-8,0 l8,-12 l8,12"
-            },
-            "warmfront" : {
-                color : "red",
-                path : "M-8,0 a8,8 0 0,1 16,0"
-            },
-            "occlusion" : {
-                color : "darkviolet",
-                path : "M-12,0 l6,-12 l6,12 a7,10 0 0,1 14,0"
-            }
-        };
-        
         if (arg) this.setNode(arg);
         
         if (opt) this.enable(opt);
     }
+    
+    WeatherFront.types = {
         
+        "coldfront" : {
+            color : "blue",
+            path : "M-8,0 l8,-12 l8,12"
+        },
+        "warmfront" : {
+            color : "red",
+            path : "M-8,0 a8,8 0 0,1 16,0"
+        },
+        "occlusion" : {
+            color : "darkviolet",
+            path : "M-12,0 l6,-12 l6,12 a7,10 0 0,1 14,0"
+        }
+    };
+    
     WeatherFront.prototype = new JSYG.StdConstruct;
     
     WeatherFront.prototype.constructor = WeatherFront;
@@ -64,11 +65,12 @@
     WeatherFront.prototype._createDefs = function() {
         
         var defs = new JSYG('<defs>').attr('id',this._idDefs),
-            that = this;
-        
-        Object.keys(this.types).forEach(function(name) {
+        that = this,
+        type,name;
+    
+        for (name in WeatherFront.types) {
             
-            var type = that.types[name];
+            type = WeatherFront.types[name];
             
             new JSYG('<path>').attr({
                 id:"jsyg-"+name,
@@ -76,7 +78,7 @@
                 fill: type.color
             })
             .appendTo(defs);
-        });
+        }
                 
         return defs[0];
     };
@@ -136,7 +138,7 @@
         };
         
         jNode.css({
-            "stroke":this.types[this.type].color,
+            "stroke":WeatherFront.types[this.type].color,
             "fill":"none"
         });
         
@@ -200,7 +202,7 @@
     WeatherFront.prototype.hide = function() {
         
         var jNode = new JSYG(this.node);
-                
+        
         if (this._originalColors) jNode.css(this._originalColors);
         
         this._clearItems();
@@ -219,7 +221,7 @@
         var parent = this.node.parentNode,
         svg = this.node.nearestViewportElement,
         defs;
-    
+        
         new JSYG(this.container)
             .addClass(this.className)
             .append(this.node)
@@ -232,7 +234,7 @@
         }
         
         this.enabled = true;
-                
+        
         this.show();
         
         return this;
