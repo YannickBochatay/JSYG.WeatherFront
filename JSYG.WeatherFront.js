@@ -43,7 +43,26 @@
     
     WeatherFront.prototype.constructor = WeatherFront;
     
-    WeatherFront.prototype.type = "coldfront";
+    Object.defineProperty(WeatherFront.prototype,"type",{
+        
+        get : function() { return this._type; },
+        
+        set : function(value) {
+            
+            var lvalue = value.toLowerCase();
+            var types;
+            
+            if (!(lvalue in WeatherFront.types)) {
+                types = Object.keys(WeatherFront.types);
+                throw new Error(value+" : type incorrect ("+types+" required)");
+            }
+            
+            this._type = value;
+        }
+    });
+    
+    WeatherFront.prototype._type = "coldfront";
+    
     
     WeatherFront.prototype.className = "weatherFront";
     
@@ -55,7 +74,7 @@
     
     WeatherFront.prototype._setHref = function(item) {
         
-        item.attr("href",'#jsyg-'+this.type);
+        item.attr("href",'#jsyg-'+this.type.toLowerCase());
         
         return this;
     };
@@ -124,6 +143,11 @@
         return this;
     };
     
+    WeatherFront.prototype._getType = function() {
+        
+        return WeatherFront.types[ this.type.toLowerCase()];
+    };
+    
     WeatherFront.prototype.show = function() {
         
         if (!this.enabled) return this;
@@ -131,6 +155,7 @@
         this._clearItems();
         
         var jNode = new JSYG(this.node);
+        var type = this._getType();
         
         this._originalColors = {
             stroke:jNode.css("stroke"),
@@ -138,7 +163,7 @@
         };
         
         jNode.css({
-            "stroke":WeatherFront.types[this.type].color,
+            "stroke":type.color,
             "fill":"none"
         });
         
