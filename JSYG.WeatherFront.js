@@ -6,7 +6,7 @@
     if (typeof define != "undefined" && define.amd) define("jsyg-weatherfront",["jsyg","jsyg-path","jsyg-container"],factory);
     else if (typeof JSYG != "undefined") {
         if (JSYG.Path && JSYG.Container) factory(JSYG,JSYG.Path,JSYG.Container);
-        else throw new Error("You need JSYG.Path");
+        else throw new Error("Dependency is missing");
     }
     else throw new Error("JSYG is needed");
     
