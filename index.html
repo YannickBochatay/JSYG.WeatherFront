@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <title>JSYG tests</title>
         <link rel="stylesheet" href="bower_components/qunit/qunit/qunit.css">
         <script src="bower_components/qunit/qunit/qunit.js"></script>
@@ -12,17 +13,24 @@
         <script src="bower_components/jsyg-pathdrawer/JSYG.PathDrawer.js"></script>
         <script src="JSYG.WeatherFront.js"></script>
         <style>
-            svg {
-                border:1px solid gray;
+            html,body {
+                margin:0;
+                padding:0;
+            }
+            body {
+                height:100vh;
+                width:100vw;
+                overflow:hidden;
             }
             path.front {
                 fill:none;
                 stroke:black;
+                stroke-width:2;
             }
         </style>
     </head>
     <body>
-        <svg width="100%" height="700px">
+        <svg width="100%" height="90%">
         </svg>
         <label>
             <input type="radio" name="typefront" value="coldfront" checked="checked"/> coldfront
@@ -33,6 +41,7 @@
         <label>
             <input type="radio" name="typefront" value="occlusion"/> occlusion
         </label>
+        <!--
         <br>
         Stroke width : 0.1 <input type="range" min="0.1" max="20" step="0.1" name="strokeWidth" value="2"/> 20
         <br/>
@@ -43,33 +52,36 @@
         <label>
             <input type="checkbox" name="reverseAngle"/> reverseAngle
         </label>
+        -->
         <script>
             var pencil = new JSYG.PathDrawer();
             
             pencil.on("end",function() {
                 
                 new JSYG(this).weatherFront({
+                    type : new JSYG("[name=typefront]:checked").val()/*,
                     patternScale: new JSYG("[name=patternScale]").val(),
                     patternSpacing: new JSYG("[name=patternSpacing]").val(),
-                    type : new JSYG("[name=typefront]:checked").val(),
-                    inverseAngle : !!new JSYG("[name=reverseAngle]:checked").length
+                    inverseAngle : !!new JSYG("[name=reverseAngle]:checked").length*/
                 });
             });
             
-            pencil.type = "point2point";
+            pencil.type = "freehand";
             
-            $("svg").on("mousedown",function(e) {
+            $("svg").on("vmousedown",function(e) {
                
                if (pencil.inProgress) return;
                
                var path = new JSYG.Path();
                
                path.addClass("front")
-                   .css("stroke-width", new JSYG("[name=strokeWidth]").val() )
+                   //.css("stroke-width", new JSYG("[name=strokeWidth]").val() )
                    .appendTo(this);
                
                pencil.draw(path,e);
             });
+            
+            window.addEventListener('load', function(e) { setTimeout(function() { window.scrollTo(0, 1); }, 1);});
         </script>
     </body>
 </html>
