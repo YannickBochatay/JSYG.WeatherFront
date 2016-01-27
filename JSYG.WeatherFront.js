@@ -94,7 +94,10 @@
             new JSYG('<path>').attr({
                 id:"jsyg-"+name,
                 d: type.path,
-                fill: type.color
+            })
+            .css({
+                "fill":type.color,
+                "stroke":"none"
             })
             .appendTo(defs);
         }
