@@ -9,9 +9,9 @@
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/jsyg/JSYG.js"></script>
         <script src="bower_components/jsyg-path/JSYG.Path.js"></script>
-        <script src="bower_components/jsyg-container/JSYG.Container.js"></script>
+        <!--<script src="bower_components/jsyg-container/JSYG.Container.js"></script>-->
         <script src="bower_components/jsyg-pathdrawer/JSYG.PathDrawer.js"></script>
-        <script src="JSYG.WeatherFront.js"></script>
+        <!--<script src="JSYG.WeatherFront.js"></script>-->
         <style>
             html,body {
                 margin:0;
@@ -50,10 +50,10 @@
             var pencil = new JSYG.PathDrawer();
             
             pencil.on("end",function() {
-                
+                /*
                 new JSYG(this).weatherFront({
                     type : new JSYG("[name=typefront]:checked").val()
-                });
+                });*/
             });
             
             $("svg").on("vmousedown",function(e) {
